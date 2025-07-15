@@ -1,0 +1,11 @@
+# data/projects/ddsf.yaml
+'@type': SERVICE
+name: Data and Digital Solutions Fund (DDSF)
+description: Funding stream to support local data innovations for children’s services.
+lead_organisation: department_for_education
+collaborators:
+  - alister_herbert
+  - paul dryden
+tags:
+  - d2i
+  - data-improvement

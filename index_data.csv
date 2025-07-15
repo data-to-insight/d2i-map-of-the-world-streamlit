@@ -1,0 +1,23 @@
+name,type,subtype,tags,organisation,region,projects,folder,filename
+North West ADCS,AGENT,Organisation,"regional-partnership, adcs, safeguarding",,North West,standard_safeguarding_dataset,orgs,north_west_adcs.yaml
+Essex County Council,AGENT,Organisation,"local-authority, safeguarding",,East of England,standard_safeguarding_dataset,orgs,essex_county_council.yaml
+Knowsley Council,AGENT,Organisation,"local-authority, safeguarding",,North West,standard_safeguarding_dataset,orgs,knowsley_council.yaml
+Data to Insight,AGENT,Organisation,"la-led, data-tools, children-services, collaboration",,England,"ddsf, rcc, standard-safeguarding-dataset, nvest, patch",orgs,data_to_insight.yaml
+Lancaster University,AGENT,Organisation,"academic, children-services",,England,"",orgs,lancaster-university.yaml
+Hertfordshire County Council,AGENT,Organisation,"local-authority, safeguarding",,East of England,standard_safeguarding_dataset,orgs,hertfordshire_county_council.yaml
+Department for Education,AGENT,Organisation,"government, children-services",,England,"",orgs,department_for_education.yaml
+Karen Broadhurst,AGENT,Individual,"government, children-services",department-for-education,England,"",people,karen_broadhurst.yaml
+Alister Herbert,AGENT,Individual,"data-to-insight, local-authority, consultant, south-east",data-to-insight,South East,"ddsf, rcc",people,alister_herbert.yaml
+Alice Smith,AGENT,Individual,"safeguarding, multi-agency",townville-council,North West,safeguarding-review-2023,people,alice_smith.yaml
+Regional Care Co-operative (RCC),SERVICE,,"placement, commissioning, d2i",,,"",projects,rcc.yaml
+NVEST (National Value & Effectiveness Study Tool),SERVICE,,"nvest, value-for-money, children-services, dlucl, effectiveness",,England,"",projects,nvest.yaml
+Townville Safeguarding Review 2023,SERVICE,,"safeguarding, local-review",,,"",projects,safeguarding_review_2023.yaml
+Data and Digital Solutions Fund (DDSF),SERVICE,,"d2i, data-improvement",,,"",projects,ddsf.yaml
+Standard Safeguarding Dataset (SSD),SERVICE,,"ssd, data-standard, safeguarding, dfe-funded",,England,"",projects,standard_safeguarding_dataset.yaml
+Essex – Data to Insight SSD collaboration,RELATIONSHIP,,"safeguarding, ssd, local-authority",,,"",relationships,essex_county_council__data_to_insight.yaml
+Alister Herbert – Data to Insight affiliation,RELATIONSHIP,,"d2i, community-leadership",,,"",relationships,alister_herbert__data_to_insight.yaml
+Knowsley – Data to Insight SSD collaboration,RELATIONSHIP,,"safeguarding, data-standard",,,"",relationships,knowsley_council__data_to_insight.yaml
+Hertfordshire – Data to Insight SSD collaboration,RELATIONSHIP,,"safeguarding, ssd, local-authority",,,"",relationships,hertfordshire_county_council__data_to_insight.yaml
+Karen Broadhurst,RELATIONSHIP,,"academic-collaboration, children-services",,,"",relationships,karen_broadbent__lancaster_university.yaml
+Alister Herbert – Department for Education collaboration,RELATIONSHIP,,"data-collaboration, children-services, d2i",,,"",relationships,alister_herbert__department_for_education.yaml
+NW ADCS – Data to Insight SSD collaboration,RELATIONSHIP,,"safeguarding, adcs, collaboration",,,"",relationships,north_west_adcs__data_to_insight.yaml

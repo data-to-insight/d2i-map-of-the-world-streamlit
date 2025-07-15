@@ -1,0 +1,11 @@
+'@type': RELATIONSHIP
+name: Hertfordshire – Data to Insight SSD collaboration
+source: hertfordshire_county_council
+target: data_to_insight
+relationship_type: collaboratesWith
+description: >
+  Hertfordshire County Council is a key SSD partner, contributing to the dataset schema and early testing.
+tags:
+  - safeguarding
+  - ssd
+  - local-authority

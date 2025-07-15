@@ -1,0 +1,12 @@
+'@type': AGENT
+subtype: Organisation
+name: Essex County Council
+projects:
+  - standard_safeguarding_dataset
+tags:
+  - local-authority
+  - safeguarding
+region: East of England
+notes: >
+  Early adopter of the SSD model, involved in the design and practical deployment of the data standard.
+

@@ -1,0 +1,12 @@
+'@type': RELATIONSHIP
+name: Alister Herbert – Department for Education collaboration
+source: alister_herbert
+target: department_for_education
+relationship_type: collaboratesWith
+description: >
+  Alister Herbert collaborates with the Department for Education via his successful bids 
+  towards such as the SSD (DDSF) and RCC under the Data to Insight (D2I).
+tags:
+  - data-collaboration
+  - children-services
+  - d2i

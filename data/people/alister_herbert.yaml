@@ -1,0 +1,17 @@
+'@type': AGENT
+subtype: Individual
+name: Alister Herbert
+organisation: data-to-insight
+projects:
+  - ddsf
+  - rcc
+region: South East
+role: Consultant / Programme Manager
+tags:
+  - data-to-insight
+  - local-authority
+  - consultant
+  - south-east
+notes: >
+  Leads Data to Insight (D2I), a local authority collaboration programme.
+  Associated with East Sussex County Council and projects including DDSF and RCC.

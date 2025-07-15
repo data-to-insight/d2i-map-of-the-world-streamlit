@@ -1,0 +1,10 @@
+'@type': AGENT
+name: Lancaster University
+notes: University with faculty of Social Work
+projects: []
+region: England
+role: SW research org
+subtype: Organisation
+tags:
+- academic
+- children-services

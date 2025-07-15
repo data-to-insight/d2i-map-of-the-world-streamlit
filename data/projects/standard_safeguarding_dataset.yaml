@@ -1,0 +1,22 @@
+'@type': SERVICE
+name: Standard Safeguarding Dataset (SSD)
+description: >
+  A Department for Education‑funded initiative led by Data to Insight, working with
+  Hertfordshire CC, Essex CC, Knowsley Council and North West ADCS to create a
+  standardised dataset for children’s social care data sharing and outcomes tracking.
+  Based on the SSD data model and schema published in the public GitHub repo.
+lead_organisation: data_to_insight
+collaborators:
+  - hertfordshire_county_council
+  - essex_county_council
+  - knowsley_council
+  - north_west_adcs
+tags:
+  - ssd
+  - data-standard
+  - safeguarding
+  - dfe-funded
+region: England
+start_date: 2023-01-01
+notes: >
+  SSD defines a common schema layered on LA systems. Open‑source schema.

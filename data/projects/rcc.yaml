@@ -1,0 +1,11 @@
+# data/projects/rcc.yaml
+'@type': SERVICE
+name: Regional Care Co-operative (RCC)
+description: National initiative exploring regional models for children's placements and commissioning.
+lead_organisation: department_for_education
+collaborators:
+  - alister_herbert
+tags:
+  - placement
+  - commissioning
+  - d2i

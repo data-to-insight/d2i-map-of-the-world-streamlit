@@ -1,0 +1,11 @@
+'@type': RELATIONSHIP
+name: Essex – Data to Insight SSD collaboration
+source: essex_county_council
+target: data_to_insight
+relationship_type: collaboratesWith
+description: >
+  Essex County Council helped design the SSD standard and implement early practical use cases.
+tags:
+  - safeguarding
+  - ssd
+  - local-authority

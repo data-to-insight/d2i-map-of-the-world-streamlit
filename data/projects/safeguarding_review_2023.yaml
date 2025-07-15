@@ -1,0 +1,12 @@
+'@type': SERVICE
+collaborators:
+- alice-smith
+- safer-children-charity
+description: Independent review into safeguarding practices following Ofsted report.
+end_date: '2023-11-01'
+lead_organisation: townville-council
+name: Townville Safeguarding Review 2023
+start_date: '2023-05-01'
+tags:
+- safeguarding
+- local-review

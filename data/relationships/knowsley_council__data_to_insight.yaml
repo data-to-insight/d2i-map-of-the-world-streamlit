@@ -1,0 +1,10 @@
+'@type': RELATIONSHIP
+name: Knowsley – Data to Insight SSD collaboration
+source: knowsley_council
+target: data_to_insight
+relationship_type: collaboratesWith
+description: >
+  Knowsley Council participated in piloting the SSD schema for case management system alignment.
+tags:
+  - safeguarding
+  - data-standard

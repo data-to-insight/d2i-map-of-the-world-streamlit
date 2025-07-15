@@ -1,0 +1,12 @@
+'@type': AGENT
+subtype: Organisation
+name: North West ADCS
+projects:
+  - standard_safeguarding_dataset
+tags:
+  - regional-partnership
+  - adcs
+  - safeguarding
+region: North West
+notes: >
+  Regional ADCS branch coordinating collaboration and feedback from local authorities implementing the SSD.

@@ -1,0 +1,21 @@
+'@type': AGENT
+subtype: Organisation
+name: Data to Insight
+projects:
+  - ddsf
+  - rcc
+  - standard-safeguarding-dataset
+  - nvest
+  - patch
+organisation_type: Community/Network
+tags:
+  - la-led
+  - data-tools
+  - children-services
+  - collaboration
+region: England
+website: https://www.datatoinsight.org/
+notes: >
+  A sector‑led service for local authority children’s data professionals. Led by LAs,
+  supported by ADCS, DfE, DLUHC, Ofsted. Maintains toolkits, shares best practice, and
+  enables national collaboration (DDSF, RCC, NVEST, PATCh, Standard Safeguarding Dataset).

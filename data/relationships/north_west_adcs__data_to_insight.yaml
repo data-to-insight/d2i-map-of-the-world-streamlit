@@ -1,0 +1,11 @@
+'@type': RELATIONSHIP
+name: NW ADCS – Data to Insight SSD collaboration
+source: north_west_adcs
+target: data_to_insight
+relationship_type: collaboratesWith
+description: >
+  The North West ADCS branch supported cross-authority consultation and implementation for SSD.
+tags:
+  - safeguarding
+  - adcs
+  - collaboration
