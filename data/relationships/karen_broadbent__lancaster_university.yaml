@@ -1,9 +1,0 @@
-'@type': RELATIONSHIP
-description: Professor of Social Work at Lancaster Uni
-name: "Karen Broadhurst"
-relationship_type: collaboratesWith
-source: karen_broadhurst
-tags:
-- academic-collaboration
-- children-services
-target: lancaster-university

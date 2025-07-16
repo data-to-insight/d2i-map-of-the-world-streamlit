@@ -1,0 +1,10 @@
+# data/projects/ddsf.yaml
+'@type': SERVICE
+name: Children's Social Care Review
+description: 
+lead_organisation: department_for_education
+collaborators:
+  - karen_broadhurst
+tags:
+  - social-worker
+

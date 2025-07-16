@@ -1,0 +1,31 @@
+# ORGANIZATION TEMPLATE — copy and adapt for each new record
+# Save into: data/organizations/<your-file-name>.yaml
+
+'@type': ORGANIZATION
+name: <Org Name>
+organisation_type: <e.g. Local Authority, Charity, University, Community/Network>
+
+projects:
+  - <project-slug>  # List associated project slugs (match filenames in data/functions/)
+  - example-project
+
+persons:
+  - name: <Full Name>
+    role: <Their role in this org>
+    from: 2022-01-01  # Leave `to:` out if currently active
+    # to: 2024-12-31
+  - name: Another Person
+    role: ...
+    from: 2023-06-01
+
+tags:
+  - <tag-1>
+  - <tag-2>
+  - children-services
+  - collaboration
+
+region: <e.g. England, North West>
+website: <https://example.org>  # Optional
+notes: >
+  <Free-text notes about organisation.
+  Mention any partnerships, special roles, or national significance.>

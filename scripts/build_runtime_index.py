@@ -1,65 +1,61 @@
-# scripts/build_runtime_index.py
-import os, yaml
+
+# build_runtime_index.py updated for SCCM-aligned folders
+
+import os
+import yaml
 import duckdb
-from pathlib import Path
+import pandas as pd
 
-DATA_DIR = Path(__file__).resolve().parents[1] / "data"
+# SCCM folder to @type mapping
+FOLDER_TYPE_MAP = {
+    "organizations": "ORGANIZATION",
+    "services": "SERVICE",
+    "plans": "PLAN",
+    "events": "EVENT",
+    "collections": "COLLECTION",
+    "items": "ITEM",
+    "resources": "RESOURCE",
+    "relationships": "RELATIONSHIP"
+}
 
-def load_yaml_records(folder):
-    records = []
-    for subfolder in os.listdir(folder):
-        subpath = folder / subfolder
-        for file in os.listdir(subpath):
-            if file.endswith(".yaml"):
-                with open(subpath / file, 'r') as f:
+index_records = []
+
+for folder, type_value in FOLDER_TYPE_MAP.items():
+    folder_path = os.path.join("data", folder)
+    if not os.path.isdir(folder_path):
+        continue
+
+    for file in os.listdir(folder_path):
+        if file.endswith(".yaml"):
+            full_path = os.path.join(folder_path, file)
+            with open(full_path, "r") as f:
+                try:
                     data = yaml.safe_load(f)
-                    data['filename'] = file
-                    data['folder'] = subfolder
-                    records.append(data)
-    return records
+                except Exception as e:
+                    print(f"Error loading {full_path}: {e}")
+                    continue
 
-def build_duckdb_index(records):
-    con = duckdb.connect("index_data.db")
-    con.execute("DROP TABLE IF EXISTS index_data")
-    con.execute("""
-        CREATE TABLE index_data (
-            name TEXT,
-            type TEXT,
-            subtype TEXT,
-            tags TEXT,
-            organisation TEXT,
-            region TEXT,
-            projects TEXT,
-            folder TEXT,
-            filename TEXT
-        );
-    """)
-    for r in records:
-        con.execute("""
-            INSERT INTO index_data VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (
-            r.get("name"),
-            r.get("@type"),
-            r.get("subtype"),
-            ', '.join(r.get("tags", [])),
-            r.get("organisation"),
-            r.get("region"),
-            ', '.join(r.get("projects", [])) if r.get("projects") else '',
-            r.get("folder"),
-            r.get("filename")
-        ))
+            index_records.append({
+                "file_path": full_path,
+                "folder": folder,
+                "filename": file,
+                "name": data.get("name", file.replace(".yaml", "")),
+                "@type": data.get("@type", type_value),
+                "subtype": data.get("subtype", ""),
+                "tags": ", ".join(data.get("tags", [])),
+                "organisation": data.get("organisation", ""),
+                "region": data.get("region", ""),
+                "projects": ", ".join(data.get("projects", [])) if data.get("projects") else ""
+            })
 
-    # Export to CSV
-    con.execute("""
-        COPY index_data TO 'index_data.csv' (HEADER, DELIMITER ',');
-    """)
-    print("Exported index_data.csv")
+# Write to CSV
+index_df = pd.DataFrame(index_records)
+index_df.to_csv("index_data.csv", index=False)
 
-    return con
+# Save to DuckDB
+db_path = "index.db"
+con = duckdb.connect(db_path)
+con.execute("DROP TABLE IF EXISTS index_data")
+con.execute("CREATE TABLE index_data AS SELECT * FROM index_df")
 
-if __name__ == "__main__":
-    records = load_yaml_records(DATA_DIR)
-    con = build_duckdb_index(records)
-    results = con.execute("SELECT * FROM index_data").fetchall()
-    for row in results:
-        print(row)
+print("✅ DuckDB + CSV index rebuilt using SCCM folder structure")

@@ -1,6 +1,6 @@
 '@type': RELATIONSHIP
 name: NW ADCS – Data to Insight SSD collaboration
-source: north_west_adcs
+source: adcs
 target: data_to_insight
 relationship_type: collaboratesWith
 description: >

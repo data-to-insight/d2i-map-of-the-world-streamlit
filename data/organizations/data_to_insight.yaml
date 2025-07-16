@@ -1,18 +1,26 @@
-'@type': AGENT
-subtype: Organisation
+'@type': ORGANIZATION
 name: Data to Insight
+organisation_type: 
+
 projects:
   - ddsf
   - rcc
   - standard-safeguarding-dataset
   - nvest
   - patch
-organisation_type: Community/Network
+
+persons:
+  - name: Alister Herbert
+    role: Strategic Lead
+    from: 2022-01-01 
+  - name: John Foster
+    role: Data Manager
+    from: 2022-01-01 
+
 tags:
-  - la-led
   - data-tools
   - children-services
-  - collaboration
+
 region: England
 website: https://www.datatoinsight.org/
 notes: >

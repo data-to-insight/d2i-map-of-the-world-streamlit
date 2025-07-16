@@ -1,10 +1,13 @@
-'@type': AGENT
+'@type': ORGANIZATION
 name: Lancaster University
 notes: University with faculty of Social Work
 projects: []
+persons:
+  - name: Karen Broadhurst
+    role: Researcher, Professor of Social Work
 region: England
 role: SW research org
-subtype: Organisation
 tags:
 - academic
 - children-services
+

@@ -1,0 +1,19 @@
+'@type': ORGANIZATION
+name: Department for Education
+organisation_type: Central government department
+
+projects: []
+
+persons:
+persons:
+  - name: Paul Creasey
+    role: Project and Product Manager
+
+tags:
+- government
+- children-services
+
+region: England
+website: https://www.gov.uk/government/organisations/department-for-education 
+notes: >
+  UK government department responsible for education and children's services policy

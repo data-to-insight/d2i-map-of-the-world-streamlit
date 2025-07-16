@@ -1,3 +1,5 @@
+# Updated app.py to support new SCCM-aligned folder structure
+
 import streamlit as st
 import duckdb
 import os, yaml
@@ -5,12 +7,22 @@ import os, yaml
 st.set_page_config(page_title="Children's Services Knowledge Base", layout="wide")
 st.title("Children's Services Knowledge Base")
 
+# Define valid folders based on SCCM-aligned structure
+VALID_FOLDERS = [
+    "organizations", "services", "plans", "events",
+    "relationships", "collections", "items", "resources"
+]
+
 # Load YAML and build DuckDB index
 def load_yaml_records(folder):
     records = []
-    for subfolder in os.listdir(folder):
+    for subfolder in VALID_FOLDERS:
         subpath = os.path.join(folder, subfolder)
+        if not os.path.isdir(subpath):
+            continue
         for file in os.listdir(subpath):
+            if not file.endswith(".yaml"):
+                continue
             with open(os.path.join(subpath, file), 'r') as f:
                 data = yaml.safe_load(f)
                 data['filename'] = file
@@ -56,7 +68,7 @@ con = build_duckdb_index(records)
 # Sidebar filters
 st.sidebar.header("🔍 Search Filters")
 search_text = st.sidebar.text_input("Search (name/tags/org):", "")
-folder_filter = st.sidebar.selectbox("Entity Type", ["All", "people", "projects", "orgs"])
+folder_filter = st.sidebar.selectbox("Entity Type", ["All"] + VALID_FOLDERS)
 region_filter = st.sidebar.text_input("Region contains:", "")
 tag_filter = st.sidebar.text_input("Tag contains:", "")
 
@@ -85,3 +97,4 @@ for row in results:
         st.markdown(f"**Projects:** `{r['projects']}`")
         st.markdown(f"**Filename:** `{r['filename']}`")
         st.markdown(f"**Folder:** `{r['folder']}`")
+

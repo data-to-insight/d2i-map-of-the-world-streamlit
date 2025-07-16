@@ -1,0 +1,22 @@
+'@type': ORGANIZATION
+name: Hertfordshire County Council
+organisation_type: Local Authority
+
+projects:
+  - standard_safeguarding_dataset
+
+# persons:
+#   - name: <Full Name>
+#     role: <Their role in this org>
+#     from: 2022-01-01  # Leave `to:` out if currently active
+#     # to: 2024-12-31
+
+tags:
+  - local-authority
+
+region: South West
+
+website: https://www.hertfordshire.gov.uk
+
+notes: >
+  Partner in the Standard Safeguarding Dataset project, contributing to schema development and implementation pilots.

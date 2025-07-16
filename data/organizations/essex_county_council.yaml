@@ -1,0 +1,23 @@
+'@type': ORGANIZATION
+name: Essex County Council
+organisation_type: Local Authority
+
+projects:
+  - standard_safeguarding_dataset
+
+
+# persons:
+#   - name: <Full Name>
+#     role: <Their role in this org>
+#     from: 2022-01-01  # Leave `to:` out if currently active
+#     # to: 2024-12-31
+
+
+tags:
+  - local-authority
+
+region: East of England
+
+website: https://www.essex.gov.uk/
+notes: >
+  Early adopter of the SSD model, involved in the design and practical deployment of the data standard.

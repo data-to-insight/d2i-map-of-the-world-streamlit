@@ -1,6 +1,5 @@
-'@type': AGENT
-subtype: Organisation
-name: North West ADCS
+'@type': ORGANIZATION
+name: ADCS
 projects:
   - standard_safeguarding_dataset
 tags:
