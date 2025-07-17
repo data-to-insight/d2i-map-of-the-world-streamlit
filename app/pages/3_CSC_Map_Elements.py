@@ -145,7 +145,8 @@ st.title("Organisations, Tools, Services, Relations")
 # === Path Setup ===
 ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = ROOT / "data"
-PARQUET_FILE = ROOT / "index_data.parquet"
+PARQUET_FILE = DATA_DIR / "index_data.parquet"
+
 
 # === Load YAML Files and Cache as Parquet ===
 @st.cache_data(show_spinner=False)

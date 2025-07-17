@@ -1,110 +1,102 @@
 import streamlit as st
-import yaml
-import os
+import pandas as pd
 from pyvis.network import Network
 from collections import defaultdict
+from pathlib import Path
+import yaml
+import os
 
 st.set_page_config(page_title="Network Graph", layout="wide")
-st.title("Network Graph")
+st.title("Children's Social Care Network Graph")
 
-data_dir = "data" # retained outside the streamlit structure
+# === Paths ===
+ROOT = Path(__file__).resolve().parents[1]
+DATA_DIR = ROOT / "data"
+RELS_DIR = DATA_DIR / "relationships"
+PARQUET_FILE = DATA_DIR / "index_data.parquet"
+GRAPH_FILE = ROOT / "relationship_graph.html"
 
-folders = [
-    # naming/spelling in line with SCCM
-    ("organizations", "Organization"),
-    ("services", "Service"),
-    ("plans", "Plan"),
-    ("events", "Event"),
-    ("collections", "Collection"),
-    ("items", "Item"),
-    ("resources", "Resource")
-]
-rels_dir = os.path.join(data_dir, "relationships")
-graph_file = "relationship_graph.html"
 
+# === Paths ===
+ROOT = Path(__file__).resolve().parents[2]
+DATA_DIR = ROOT / "data"
+RELS_DIR = DATA_DIR / "relationships"
+PARQUET_FILE = DATA_DIR / "index_data.parquet"
+
+# # === Optional toggle: D2I-only filter ===
+# use_d2i_filter = st.sidebar.checkbox("Limit to Data to Insight?", value=False)
+
+# # === Read filters from session ===
+filters = st.session_state.get("filters", {})
+# if use_d2i_filter:
+#     filters["search"] = "data to insight"
+
+# === Load Parquet data ===
+if not PARQUET_FILE.exists():
+    st.error("Parquet file not found. Run Home page first to (re)generate it.")
+    st.stop()
+else:
+    df = pd.read_parquet(PARQUET_FILE)
+
+# === Apply filters ===
+if filters.get("search"):
+    df = df[df.apply(lambda r: filters["search"].lower() in (
+        str(r["name"]) + str(r["tags"]) + str(r["organisation"])
+    ).lower(), axis=1)]
+
+if filters.get("folder") not in [None, "All"]:
+    df = df[df["folder"] == filters["folder"]]
+
+if filters.get("region"):
+    df = df[df["region"].str.lower().str.contains(filters["region"].lower(), na=False)]
+
+if filters.get("tag"):
+    df = df[df["tags"].str.lower().str.contains(filters["tag"].lower(), na=False)]
+
+# === Build graph ===
 G = Network(height="700px", width="100%", directed=True, notebook=False)
 G.force_atlas_2based()
-
-# === Read filters from session ===
-filters = st.session_state.get("filters", {})
-
-# === Filter logic ===
-def match_filters(data, kind):
-    if filters.get("folder") not in ["All", None] and filters["folder"] != kind:
-        return False
-    if filters.get("tag") and filters["tag"].lower() not in [t.lower() for t in data.get("tags", [])]:
-        return False
-    if filters.get("region") and filters["region"].lower() not in data.get("region", "").lower():
-        return False
-    if filters.get("search") and filters["search"].lower() not in data.get("name", "").lower():
-        return False
-    return True
-
-# Track node degrees for sizing
-node_degrees = defaultdict(int)
-
-# Load YAML nodes
 included_nodes = set()
-
 node_metadata = {}
-
-def load_entities(folder_name, node_type):
-    folder_path = os.path.join(data_dir, folder_name)
-    if not os.path.isdir(folder_path):
-        return
-    for file in os.listdir(folder_path):
-        if file.endswith(".yaml") and not file.startswith("0_template"):
-            with open(os.path.join(folder_path, file)) as f:
-                data = yaml.safe_load(f)
-                if not match_filters(data, folder_name):
-                    continue
-                node_id = file.replace(".yaml", "")
-                label = data.get("name", node_id)
-                included_nodes.add(node_id)
-                node_metadata[node_id] = {
-                    "label": label,
-                    "title": f"{node_type}: {label}",
-                    "group": node_type
-                }
-
-# Load edges from relationships
+node_degrees = defaultdict(int)
 edges = []
 
-def load_relationships(path):
-    for file in os.listdir(path):
-        if file.endswith(".yaml") and not file.startswith("0_template"):
-            with open(os.path.join(path, file)) as f:
-                data = yaml.safe_load(f)
-                source = data.get("source")
-                target = data.get("target")
-                label = data.get("relationship_type", "relatesTo")
-                if source in included_nodes and target in included_nodes:
-                    node_degrees[source] += 1
-                    node_degrees[target] += 1
-                    edges.append((source, target, label, data.get("description", "")))
+# === Add nodes from filtered dataframe ===
+for _, row in df.iterrows():
+    node_id = row["filename"].replace(".yaml", "")
+    label = row["name"] or node_id
+    included_nodes.add(node_id)
+    node_metadata[node_id] = {
+        "label": label,
+        "title": f"{row['type']}: {label}",
+        "group": row["type"]
+    }
 
-# Build graph
-for folder, label in folders:
-    load_entities(folder, label)
-load_relationships(rels_dir)
+# === Add edges if both source/target present ===
+for file in os.listdir(RELS_DIR):
+    if file.endswith(".yaml") and not file.startswith("0_template"):
+        with open(RELS_DIR / file) as f:
+            data = yaml.safe_load(f)
+            source = data.get("source")
+            target = data.get("target")
+            label = data.get("relationship_type", "relatesTo")
+            if source in included_nodes and target in included_nodes:
+                node_degrees[source] += 1
+                node_degrees[target] += 1
+                edges.append((source, target, label, data.get("description", "")))
 
 if included_nodes:
-    # Add nodes with size scaling
     for node_id, meta in node_metadata.items():
         degree = node_degrees.get(node_id, 1)
         size = 10 + degree * 2
         G.add_node(node_id, label=meta["label"], title=meta["title"], group=meta["group"], size=size)
 
-    # Add edges
     for source, target, label, desc in edges:
         G.add_edge(source, target, label=label, title=desc)
 
-    G.write_html(graph_file, notebook=False)
-
-    st.markdown("### Interactive Network Graph") # sub heading on page
-    with open(graph_file, 'r', encoding='utf-8') as f:
-        graph_html = f.read()
-
-    st.components.v1.html(graph_html, height=750, scrolling=True)
+    G.write_html(str(GRAPH_FILE), notebook=False)
+    st.markdown(f"### Interactive Network Graph ({len(included_nodes)} nodes, {len(edges)} edges)")
+    with open(GRAPH_FILE, 'r', encoding='utf-8') as f:
+        st.components.v1.html(f.read(), height=750, scrolling=False)
 else:
-    st.warning("No matching entities found for current filters. Try adjusting your search.")
+    st.warning("No matching entities found for current filters.")

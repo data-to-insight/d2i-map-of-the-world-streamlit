@@ -1,7 +1,7 @@
-
 import streamlit as st
 import yaml
 import os
+import pandas as pd
 from pyvis.network import Network
 from collections import defaultdict
 from pathlib import Path
@@ -23,28 +23,53 @@ with st.expander("ℹ️ About...", expanded=False):
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 RELS_DIR = DATA_DIR / "relationships"
-GRAPH_FILE = ROOT / "relationship_graph.html"
-
 PARQUET_FILE = DATA_DIR / "index_data.parquet"
+GRAPH_FILE = ROOT / "relationship_graph.html"
 
 G = Network(height="700px", width="100%", directed=True, notebook=False)
 G.force_atlas_2based()
 
+# === Function to parse YAMLs and save as Parquet ===
+def load_yaml_records(folder: Path):
+    records = []
+    for subfolder in folder.iterdir():
+        if subfolder.is_dir():
+            for file in subfolder.glob("*.yaml"):
+                if file.name.startswith("0_template"):
+                    continue
+                with open(file, "r") as f:
+                    data = yaml.safe_load(f)
+                    data["filename"] = file.name
+                    data["folder"] = subfolder.name
+                    records.append(data)
+    return records
 
+def build_dataframe(records: list[dict]) -> pd.DataFrame:
+    rows = []
+    for r in records:
+        rows.append({
+            "name": r.get("name"),
+            "type": r.get("@type"),
+            "subtype": r.get("subtype", ""),
+            "tags": ', '.join(r.get("tags", [])),
+            "organisation": r.get("organisation", ""),
+            "region": r.get("region", ""),
+            "projects": ', '.join(r.get("projects", [])) if r.get("projects") else '',
+            "folder": r.get("folder"),
+            "filename": r.get("filename")
+        })
+    return pd.DataFrame(rows)
+
+# === Create Parquet if missing ===
 if not PARQUET_FILE.exists():
     with st.spinner("Building Parquet cache from YAMLs..."):
         records = load_yaml_records(DATA_DIR)
         df = build_dataframe(records)
         df.to_parquet(PARQUET_FILE, index=False)
 
-
-# === Default filters for D2I view ===
-filters = {
-    "search": "data to insight",
-    "folder": "All",
-    "region": "",
-    "tag": ""
-}
+# === Load Parquet and filter to 'data to insight' ===
+df = pd.read_parquet(PARQUET_FILE)
+df_subset = df[df["name"].str.lower().str.contains("data to insight", na=False)]
 
 # === Load filtered nodes ===
 node_degrees = defaultdict(int)
@@ -52,43 +77,17 @@ included_nodes = set()
 node_metadata = {}
 edges = []
 
-folder_map = {
-    "organizations": "Organization",
-    "services": "Service",
-    "plans": "Plan",
-    "events": "Event",
-    "collections": "Collection",
-    "items": "Item",
-    "resources": "Resource"
-}
-
-for folder, label in folder_map.items():
-    folder_path = DATA_DIR / folder
-    if not folder_path.exists():
-        continue
-    for file in os.listdir(folder_path):
-        if file.endswith(".yaml") and not file.startswith("0_template"):
-            path = folder_path / file
-            with open(path) as f:
-                data = yaml.safe_load(f)
-                node_id = file.replace(".yaml", "")
-                label_val = data.get("name", node_id)
-                search_target = ' '.join([
-                    label_val,
-                    node_id,
-                    data.get("organisation", ""),
-                    ', '.join(data.get("tags", []))
-                ]).lower()
-
-                if filters["search"] not in search_target:
-                    continue
-
-                included_nodes.add(node_id)
-                node_metadata[node_id] = {
-                    "label": label_val,
-                    "title": f"{label}: {label_val}",
-                    "group": label
-                }
+# We no longer need folder_map – the label can come from type
+for _, row in df_subset.iterrows():
+    node_id = row["filename"].replace(".yaml", "")
+    label_val = row["name"]
+    label_type = row["type"] or "Unknown"
+    included_nodes.add(node_id)
+    node_metadata[node_id] = {
+        "label": label_val,
+        "title": f"{label_type}: {label_val}",
+        "group": label_type
+    }
 
 # === Load and filter relationships ===
 for file in os.listdir(RELS_DIR):
