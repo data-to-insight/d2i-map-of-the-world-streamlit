@@ -1,0 +1,39 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Streamlit cache
+.streamlit/
+
+# Virtual environments
+env/
+venv/
+.venv/
+
+# Logs and system files
+*.log
+.DS_Store
+Thumbs.db
+
+# Parquet cache
+/data/*.parquet
+
+# DuckDB temp files
+*.db
+*.duckdb
+
+# Test outputs and coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+coverage.xml
+*.cover
+*.py,cover
+
+# PyInstaller build files
+build/
+dist/
+*.spec

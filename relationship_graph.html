@@ -88,7 +88,7 @@
                   
 
                   // parsing and collecting nodes and edges from the python
-                  nodes = new vis.DataSet([{"group": "Organization", "id": "essex_county_council", "label": "Essex County Council", "shape": "dot", "size": 12, "title": "Organization: Essex County Council"}, {"group": "Organization", "id": "knowsley_council", "label": "Knowsley Council", "shape": "dot", "size": 12, "title": "Organization: Knowsley Council"}, {"group": "Organization", "id": "lancaster_university", "label": "Lancaster University", "shape": "dot", "size": 12, "title": "Organization: Lancaster University"}, {"group": "Organization", "id": "rcc", "label": "Regional Care Co-operative (RCC)", "shape": "dot", "size": 12, "title": "Organization: Regional Care Co-operative (RCC)"}, {"group": "Organization", "id": "data_to_insight", "label": "Data to Insight", "shape": "dot", "size": 18, "title": "Organization: Data to Insight"}, {"group": "Organization", "id": "hertfordshire_county_council", "label": "Hertfordshire County Council", "shape": "dot", "size": 12, "title": "Organization: Hertfordshire County Council"}, {"group": "Organization", "id": "adcs", "label": "ADCS", "shape": "dot", "size": 12, "title": "Organization: ADCS"}, {"group": "Organization", "id": "department_for_education", "label": "Department for Education", "shape": "dot", "size": 12, "title": "Organization: Department for Education"}, {"group": "Service", "id": "standard_safeguarding_dataset", "label": "Standard Safeguarding Dataset (SSD)", "shape": "dot", "size": 12, "title": "Service: Standard Safeguarding Dataset (SSD)"}, {"group": "Plan", "id": "nvest", "label": "NVEST (National Value \u0026 Effectiveness Study Tool)", "shape": "dot", "size": 12, "title": "Plan: NVEST (National Value \u0026 Effectiveness Study Tool)"}, {"group": "Plan", "id": "ddsf", "label": "Data and Digital Solutions Fund (DDSF)", "shape": "dot", "size": 12, "title": "Plan: Data and Digital Solutions Fund (DDSF)"}, {"group": "Event", "id": "childrens_social_care_review", "label": "Children\u0027s Social Care Review", "shape": "dot", "size": 12, "title": "Event: Children\u0027s Social Care Review"}]);
+                  nodes = new vis.DataSet([{"group": "Unclassified", "id": "knowsley_council", "label": "knowsley_council", "shape": "dot", "size": 12, "title": "knowsley_council\u003cbr\u003eDegree: 1"}, {"group": "Unclassified", "id": "hertfordshire_county_council", "label": "hertfordshire_county_council", "shape": "dot", "size": 12, "title": "hertfordshire_county_council\u003cbr\u003eDegree: 1"}, {"group": "Unclassified", "id": "adcs", "label": "adcs", "shape": "dot", "size": 12, "title": "adcs\u003cbr\u003eDegree: 1"}, {"group": "Organization", "id": "data_to_insight", "label": "Data to Insight", "shape": "dot", "size": 18, "title": "Organization: Data to Insight\u003cbr\u003eDegree: 4"}, {"group": "Unclassified", "id": "essex_county_council", "label": "essex_county_council", "shape": "dot", "size": 12, "title": "essex_county_council\u003cbr\u003eDegree: 1"}]);
                   edges = new vis.DataSet([{"arrows": "to", "from": "essex_county_council", "label": "collaboratesWith", "title": "Essex County Council helped design the SSD standard and implement early practical use cases.\n", "to": "data_to_insight"}, {"arrows": "to", "from": "knowsley_council", "label": "collaboratesWith", "title": "Knowsley Council participated in piloting the SSD schema for case management system alignment.\n", "to": "data_to_insight"}, {"arrows": "to", "from": "hertfordshire_county_council", "label": "collaboratesWith", "title": "Hertfordshire County Council is a key SSD partner, contributing to the dataset schema and early testing.\n", "to": "data_to_insight"}, {"arrows": "to", "from": "adcs", "label": "collaboratesWith", "title": "The North West ADCS branch supported cross-authority consultation and implementation for SSD.\n", "to": "data_to_insight"}]);
 
                   nodeColors = {};
@@ -100,44 +100,7 @@
                   // adding nodes and edges to the graph
                   data = {nodes: nodes, edges: edges};
 
-                  var options = {
-    "configure": {
-        "enabled": false
-    },
-    "edges": {
-        "color": {
-            "inherit": true
-        },
-        "smooth": {
-            "enabled": true,
-            "type": "dynamic"
-        }
-    },
-    "interaction": {
-        "dragNodes": true,
-        "hideEdgesOnDrag": false,
-        "hideNodesOnDrag": false
-    },
-    "physics": {
-        "enabled": true,
-        "forceAtlas2Based": {
-            "avoidOverlap": 0,
-            "centralGravity": 0.01,
-            "damping": 0.4,
-            "gravitationalConstant": -50,
-            "springConstant": 0.08,
-            "springLength": 100
-        },
-        "solver": "forceAtlas2Based",
-        "stabilization": {
-            "enabled": true,
-            "fit": true,
-            "iterations": 1000,
-            "onlyDynamicEdges": false,
-            "updateInterval": 50
-        }
-    }
-};
+                  var options = {"nodes": {"scaling": {"min": 10, "max": 30}, "font": {"size": 14}}, "edges": {"arrows": {"to": {"enabled": true}}, "smooth": false}, "interaction": {"navigationButtons": true, "zoomView": true}, "layout": {"improvedLayout": true}, "physics": {"enabled": true, "forceAtlas2Based": {"gravitationalConstant": -50, "centralGravity": 0.01, "springLength": 100, "springConstant": 0.08}, "solver": "forceAtlas2Based", "timestep": 0.35, "stabilization": {"enabled": true, "iterations": 150}}};
 
                   
 

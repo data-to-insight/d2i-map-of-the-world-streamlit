@@ -4,49 +4,63 @@
 [![Built with Streamlit](https://img.shields.io/badge/Built%20with-Streamlit-ff4b4b)](https://streamlit.io)
 [![DuckDB Powered](https://img.shields.io/badge/Database-DuckDB-blueviolet)](https://duckdb.org)
 
-A lightweight, open-source, Git-native 'map of the world' or knowledge base for connected **people**, **projects**, and **organisations** in the **children’s services sector**, aligned to the [Smart City Concept Model (SCCM)](http://www.smartcityconceptmodel.com/).
+An open-source, Git-native 'map of the world' or knowledge base for connected **people**, **projects**, and **organisations** in the **children’s services sector**, aligned to the [Smart City Concept Model/framework (SCCM)](http://www.smartcityconceptmodel.com/).
 
 ---
+
+## Notes / Dev story
+
+- How can/should we structure the (meta) data about every element within the map (csv, db, flat file, .yml...)
+- Can|should we store the names of people around the various initiatives/projects (is that relevant/useful and would they want that)
+- How do we store the data for retrieval, as we scale up with larger volumes what impact will this have (esp on load/search times)
+- 
 
 ## Structure
 
 ```
-childrens_knowledge_base/
+/knowledge_base
+├── app/
+│   ├── Home.py
+│   └── pages/
+│       └── 1_relationships.py
+│       └── 2_network_view.py
+│       └── 3_map_elements.py
 ├── data/
-│   ├── people/       # Individual agents
-│   ├── projects/     # Services or events
-│   └── orgs/         # Organisations
+│   ├── index_data.parquet  ← cached index lives here
+│   └── organizations/...   ← sccm framework folder struct with flat files
+│   └── relationships/...   
 ├── scripts/
-│   ├── app.py               # Streamlit UI
+│   ├── app.py                  # Streamlit UI
 │   ├── build_runtime_index.py  # Build DuckDB index from YAML
-│   ├── validate_schema.py  # Validate YAMLs against schema
-│   └── nlp_to_sql.py        # Stub for natural-language to SQL
+│   ├── validate_schema.py      # Validate YAMLs against schema
+│   └── nlp_to_sql.py           # Stub for natural-language to SQL
 └── README.md
+
 ```
 
 ---
 
-## Getting Started
+## Dev Notes
 
-### Install dependencies
+### Dependencies
 
-You’ll need Python 3.9+ and the following packages:
+Python 3.9+ and the following packages:
 
 ```bash
 pip install streamlit duckdb pyyaml cerberus
 ```
 
-### Run the Streamlit App
+### Run Streamlit App
 
 ```bash
 streamlit run app/Home.py
 ```
 
-This will launch local UI in browser for exploring people, projects, and orgs.
+Will launch local UI in browser for exploring|searching people, projects, and orgs.
 
 ---
 
-## Dev Notes
+
 
 ### Validate YAML Structure
 

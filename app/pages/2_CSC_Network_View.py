@@ -1,5 +1,3 @@
-# Updated graph_viewer.py to support SCCM-aligned folders with filters, sizing by degree, and empty-state warning
-
 import streamlit as st
 import yaml
 import os
@@ -7,10 +5,12 @@ from pyvis.network import Network
 from collections import defaultdict
 
 st.set_page_config(page_title="Network Graph", layout="wide")
-st.title("Network Graph Viewer")
+st.title("Network Graph")
 
-data_dir = "data"
+data_dir = "data" # retained outside the streamlit structure
+
 folders = [
+    # naming/spelling in line with SCCM
     ("organizations", "Organization"),
     ("services", "Service"),
     ("plans", "Plan"),
@@ -45,6 +45,7 @@ node_degrees = defaultdict(int)
 
 # Load YAML nodes
 included_nodes = set()
+
 node_metadata = {}
 
 def load_entities(folder_name, node_type):

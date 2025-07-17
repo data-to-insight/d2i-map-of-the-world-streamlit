@@ -1,4 +1,3 @@
-# Updated graph_viewer.py to support SCCM-aligned folders with filters, sizing by degree, and empty-state warning
 
 import streamlit as st
 import yaml
@@ -7,72 +6,45 @@ from pyvis.network import Network
 from collections import defaultdict
 from pathlib import Path
 
-st.set_page_config(page_title="Children's Services Map of the World (SCCM)", layout="wide")
-st.title("Children's Services Map of the World")
+st.set_page_config(page_title="Map of the World", layout="wide")
+st.title("Map of the World - Children's Social Care")
+
+# === Home page content ===
+with st.expander("ℹ️ About...", expanded=False):
+    st.markdown("""
+    D2I project to map the data connections within the Children’s Social Care(CSC) ecosystem.
+    (in progress)
+    Inspired in part by the work within www.childrensservices.network/network.html
+                
+    *Key aims*
+    
+    """)
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 RELS_DIR = DATA_DIR / "relationships"
 GRAPH_FILE = ROOT / "relationship_graph.html"
 
+PARQUET_FILE = DATA_DIR / "index_data.parquet"
+
 G = Network(height="700px", width="100%", directed=True, notebook=False)
 G.force_atlas_2based()
 
-# === Sidebar filters with default ===
-st.sidebar.header("🔍 Search Filters")
-search_text = st.sidebar.text_input("Search (name/tags/org):", st.session_state.get("filters", {}).get("search", ""))
-folder_filter = st.sidebar.selectbox("Entity Type", [
-    "All",
-    "organizations",
-    "services",
-    "plans",
-    "events",
-    "relationships",
-    "collections",
-    "items",
-    "resources"
-], index=0 if "filters" not in st.session_state else [
-    "All",
-    "organizations",
-    "services",
-    "plans",
-    "events",
-    "relationships",
-    "collections",
-    "items",
-    "resources"
-].index(st.session_state.get("filters", {}).get("folder", "All")))
-region_filter = st.sidebar.text_input("Region contains:", st.session_state.get("filters", {}).get("region", ""))
-tag_filter = st.sidebar.text_input("Tag contains:", st.session_state.get("filters", {}).get("tag", ""))
 
-# === Reset Filters Button ===
-if st.sidebar.button("Reset Filters"):
-    st.session_state["filters"] = {
-        "tag": "",
-        "region": "",
-        "folder": "All",
-        "search": ""
-    }
-    st.rerun()
+if not PARQUET_FILE.exists():
+    with st.spinner("Building Parquet cache from YAMLs..."):
+        records = load_yaml_records(DATA_DIR)
+        df = build_dataframe(records)
+        df.to_parquet(PARQUET_FILE, index=False)
 
-# === Default filters on first load ===
-if "filters" not in st.session_state:
-    st.session_state["filters"] = {
-        "tag": "",
-        "region": "",
-        "folder": "organizations",
-        "search": "data_to_insight"
-    }
 
-# === Sync filters with input ===
-st.session_state["filters"].update({
-    "search": search_text,
-    "folder": folder_filter,
-    "region": region_filter,
-    "tag": tag_filter
-})
-
-filters = st.session_state["filters"]
+# === Default filters for D2I view ===
+filters = {
+    "search": "data to insight",
+    "folder": "All",
+    "region": "",
+    "tag": ""
+}
 
 # === Load filtered nodes ===
 node_degrees = defaultdict(int)
@@ -108,14 +80,7 @@ for folder, label in folder_map.items():
                     ', '.join(data.get("tags", []))
                 ]).lower()
 
-                # Apply filters
-                if filters.get("folder") not in ["All", None] and filters["folder"] != folder:
-                    continue
-                if filters.get("tag") and filters["tag"].lower() not in ', '.join(data.get("tags", [])).lower():
-                    continue
-                if filters.get("region") and filters["region"].lower() not in data.get("region", "").lower():
-                    continue
-                if filters.get("search") and filters["search"].lower() not in search_target:
+                if filters["search"] not in search_target:
                     continue
 
                 included_nodes.add(node_id)
@@ -156,53 +121,41 @@ if included_nodes:
     for source, target, label, desc in edges:
         G.add_edge(source, target, label=label, title=desc)
 
-    G.show_buttons(filter_=['physics'])
-    G.toggle_physics(True)
     G.set_options("""
     {
-    "nodes": {
-        "scaling": {
-        "min": 10,
-        "max": 30
-        }
-    },
-    "interaction": {
-        "navigationButtons": true,
-        "zoomView": true
-    },
-    "layout": {
-        "improvedLayout": true
-    },
-    "physics": {
-        "forceAtlas2Based": {
-        "gravitationalConstant": -50,
-        "centralGravity": 0.01,
-        "springLength": 100,
-        "springConstant": 0.08
+        "nodes": {
+            "scaling": { "min": 10, "max": 30 },
+            "font": { "size": 14 }
         },
-        "solver": "forceAtlas2Based",
-        "timestep": 0.35,
-        "stabilization": {
-        "iterations": 150
+        "edges": {
+            "arrows": { "to": { "enabled": true } },
+            "smooth": false
+        },
+        "interaction": {
+            "navigationButtons": true,
+            "zoomView": true
+        },
+        "layout": {
+            "improvedLayout": true
+        },
+        "physics": {
+            "enabled": true,
+            "forceAtlas2Based": {
+                "gravitationalConstant": -50,
+                "centralGravity": 0.01,
+                "springLength": 100,
+                "springConstant": 0.08
+            },
+            "solver": "forceAtlas2Based",
+            "timestep": 0.35,
+            "stabilization": { "enabled": true, "iterations": 150 }
         }
-    }
     }
     """)
 
     G.write_html(str(GRAPH_FILE), notebook=False)
-    st.markdown(f"### Interactive Network Graph ({len(included_nodes)} nodes, {len(edges)} edges)")
+    st.markdown(f"### D2I Network View ({len(included_nodes)} nodes, {len(edges)} edges)")
     with open(GRAPH_FILE, 'r', encoding='utf-8') as f:
-        st.components.v1.html(f.read(), height=750, scrolling=True)
+        st.components.v1.html(f.read(), height=750, scrolling=False)
 else:
     st.warning("No matching entities found for current filters.")
-
-# === Home page content ===
-with st.expander("ℹ️ About the Map", expanded=False):
-    st.markdown("""
-            
-    Data connections within the Children’s Services ecosystem.
-
-    tbc - some project desc still to come here.
-        
-                
-    """)

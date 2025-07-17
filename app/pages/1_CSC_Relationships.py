@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 
 st.set_page_config(page_title="Sector Relations", layout="wide")
-st.title("🔗 Sector Relations")
+st.title("🔗 Relations")
 
 # === Path Setup ===
 ROOT = Path(__file__).resolve().parents[2]
@@ -47,7 +47,7 @@ def load_filtered_relationships(path):
 relationships = load_filtered_relationships(REL_DIR)
 
 # === Output
-st.markdown(f"### Found {len(relationships)} matching relationships")
+st.markdown(f"### Found {len(relationships)} matching relations")
 
 if relationships:
     for rel in relationships:
